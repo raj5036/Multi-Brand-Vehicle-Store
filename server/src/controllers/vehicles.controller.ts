@@ -16,8 +16,15 @@ export const listVehiclesHandler = asyncHandler(async (req: Request, res: Respon
 	const parsed = listVehiclesQuerySchema.safeParse(req.query);
 	if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
 
-	const vehicles = await listVehicles(parsed.data);
-	res.json({ data: vehicles });
+	const { page, limit, ...rest } = parsed.data;
+
+	const result = await listVehicles({
+		...rest,
+		page,
+		limit,
+	} as any);
+
+	res.json({ data: result.items, meta: result.meta });
 });
 
 export const getVehicleByIdHandler = asyncHandler(async (req: Request, res: Response) => {

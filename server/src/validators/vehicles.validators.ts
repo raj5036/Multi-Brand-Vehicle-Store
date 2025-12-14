@@ -5,6 +5,10 @@ export const listVehiclesQuerySchema = z.object({
 	fuelType: z.enum(["PETROL", "DIESEL", "ELECTRIC"]).optional(),
 	minPrice: z.coerce.number().int().nonnegative().optional(),
 	maxPrice: z.coerce.number().int().nonnegative().optional(),
+
+	// pagination
+	page: z.coerce.number().int().min(1).optional().default(1),
+	limit: z.coerce.number().int().min(1).max(50).optional().default(12),
 });
 
 export const vehicleIdParamsSchema = z.object({

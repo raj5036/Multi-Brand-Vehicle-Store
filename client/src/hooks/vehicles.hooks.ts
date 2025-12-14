@@ -1,14 +1,20 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, ApiResponse } from "../lib/api";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
+import { api, ApiResponse, PaginatedResponse } from "../lib/api";
 import { Vehicle, VehicleFilters, VehicleListItem } from "../types/vehicle";
 
-export function useVehicles(filters: VehicleFilters) {
-	return useQuery({
-		queryKey: ["vehicles", filters],
-		queryFn: async () => {
-			const res = await api.get<ApiResponse<VehicleListItem[]>>("/vehicles", { params: filters });
-			return res.data.data;
+export function useVehicles(filters: VehicleFilters & { limit?: number }) {
+	const limit = filters.limit ?? 12;
+
+	return useInfiniteQuery({
+		queryKey: ["vehicles-infinite", { ...filters, limit }],
+		initialPageParam: 1,
+		queryFn: async ({ pageParam }) => {
+			const res = await api.get<PaginatedResponse<VehicleListItem[]>>("/vehicles", {
+				params: { ...filters, page: pageParam, limit },
+			});
+			return res.data;
 		},
+		getNextPageParam: (lastPage) => (lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined),
 	});
 }
 

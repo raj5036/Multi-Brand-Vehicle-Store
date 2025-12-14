@@ -8,7 +8,8 @@ import ErrorState from "../components/ErrorState";
 
 export default function CatalogPage() {
 	const [filters, setFilters] = useState<VehicleFilters>({});
-	const { data, isLoading, isError } = useVehicles(filters);
+	const { data, isLoading, isError } = useVehicles({ ...filters, limit: 12 });
+	const allVehicles = data?.pages.flatMap((page) => page.data) ?? [];
 
 	return (
 		<div>
@@ -22,7 +23,7 @@ export default function CatalogPage() {
 
 			{data && (
 				<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
-					{data.map((v) => <VehicleCard key={v.id} v={v} />)}
+					{allVehicles.map((v) => <VehicleCard key={v.id} v={v} />)}
 				</div>
 			)}
 		</div>
