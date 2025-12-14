@@ -1,5 +1,21 @@
 import { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {
+	Box,
+	Button,
+	Card,
+	CardContent,
+	Chip,
+	Divider,
+	MobileStepper,
+	Paper,
+	TextField,
+	Typography,
+	Grid
+} from "@mui/material";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+
 import { useVehicle } from "../hooks/vehicles.hooks";
 import { useBookmarks, useCreateBookmark } from "../hooks/bookmarks.hooks";
 import { useCreateBooking } from "../hooks/bookings.hooks";
@@ -27,109 +43,185 @@ export default function VehicleDetailsPage() {
 		note: "",
 	});
 
+	// Carousel state
+	const [activeStep, setActiveStep] = useState(0);
+
 	if (isLoading) return <Loading />;
 	if (isError || !vehicle) return <ErrorState message="Vehicle not found" />;
 
+	const maxSteps = vehicle.imageUrls?.length ?? 0;
+	const canSubmit =
+		!!form.customerName.trim() && !!form.customerEmail.trim() && !createBooking.isPending;
+
 	return (
-		<div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: 16 }}>
-			<div>
-				<h3 style={{ marginTop: 0 }}>
-					{vehicle.brand} — {vehicle.name}
-				</h3>
+		<Box sx={{ width: "100%" }}>
+			<Grid container spacing={2}>
+				{/* LEFT: Details */}
+				<Grid size={{ xs: 12, md: 8 }}>
+					<Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+						<Typography variant="h5" sx={{ fontWeight: 800 }}>
+							{vehicle.brand} — {vehicle.name}
+						</Typography>
 
-				<div style={{ fontWeight: 700, fontSize: 18 }}>₹ {vehicle.price.toLocaleString("en-IN")}</div>
-				<div style={{ marginTop: 6, opacity: 0.7 }}>{vehicle.fuelType}</div>
+						<Typography variant="h6" sx={{ fontWeight: 800 }}>
+							₹ {vehicle.price.toLocaleString("en-IN")}
+						</Typography>
 
-				<div style={{ height: 12 }} />
+						<Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+							<Chip size="small" label={vehicle.fuelType} variant="outlined" />
+						</Box>
 
-				<div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-					{vehicle.imageUrls.map((u) => (
-						<img key={u} src={u} alt="vehicle" style={{ width: 240, height: 160, objectFit: "cover", borderRadius: 12, border: "1px solid #eee" }} />
-					))}
-				</div>
+						{/* Image Carousel */}
+						{maxSteps > 0 && (
+							<Paper
+								variant="outlined"
+								sx={{
+									mt: 1,
+									borderRadius: 2,
+									overflow: "hidden",
+								}}
+							>
+								<Box
+									sx={{
+										width: "100%",
+										aspectRatio: { xs: "16 / 10", sm: "16 / 9" },
+										bgcolor: "background.default",
+									}}
+								>
+									<Box
+										component="img"
+										src={vehicle.imageUrls[activeStep]}
+										alt={`vehicle-${activeStep + 1}`}
+										sx={{
+											width: "100%",
+											height: "100%",
+											display: "block",
+											objectFit: "cover",
+										}}
+									/>
+								</Box>
 
-				<div style={{ height: 12 }} />
-				<p style={{ lineHeight: 1.6 }}>{vehicle.description}</p>
+								<MobileStepper
+									steps={maxSteps}
+									position="static"
+									activeStep={activeStep}
+									sx={{ borderTop: "1px solid", borderColor: "divider" }}
+									nextButton={
+										<Button
+											size="small"
+											onClick={() => setActiveStep((s) => Math.min(s + 1, maxSteps - 1))}
+											disabled={activeStep === maxSteps - 1}
+											endIcon={<KeyboardArrowRight />}
+										>
+											Next
+										</Button>
+									}
+									backButton={
+										<Button
+											size="small"
+											onClick={() => setActiveStep((s) => Math.max(s - 1, 0))}
+											disabled={activeStep === 0}
+											startIcon={<KeyboardArrowLeft />}
+										>
+											Back
+										</Button>
+									}
+								/>
+							</Paper>
+						)}
 
-				<button
-					disabled={isBookmarked || createBookmark.isPending}
-					onClick={() => createBookmark.mutate(vehicle.id)}
-					style={{
-						padding: "10px 14px",
-						borderRadius: 10,
-						border: "1px solid #ddd",
-						background: isBookmarked ? "#f3f3f3" : "white",
-						cursor: isBookmarked ? "not-allowed" : "pointer",
-						fontWeight: 600,
-					}}
-				>
-					{isBookmarked ? "Bookmarked" : "Bookmark"}
-				</button>
-			</div>
+						<Divider sx={{ my: 1 }} />
 
-			<div style={{ border: "1px solid #eee", borderRadius: 12, padding: 12 }}>
-				<h4 style={{ marginTop: 0 }}>Book Now</h4>
+						<Typography variant="body1" sx={{ lineHeight: 1.7 }}>
+							{vehicle.description}
+						</Typography>
 
-				<label style={{ fontSize: 12, opacity: 0.7 }}>Name</label>
-				<input
-					value={form.customerName}
-					onChange={(e) => setForm({ ...form, customerName: e.target.value })}
-					style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #ddd", marginBottom: 10 }}
-				/>
+						<Box>
+							<Button
+								disabled={isBookmarked || createBookmark.isPending}
+								onClick={() => createBookmark.mutate(vehicle.id)}
+								variant={isBookmarked ? "contained" : "outlined"}
+								color={isBookmarked ? "inherit" : "primary"}
+								sx={{
+									mt: 1,
+									fontWeight: 700,
+									borderRadius: 2,
+								}}
+							>
+								{isBookmarked ? "Bookmarked" : "Bookmark"}
+							</Button>
+						</Box>
+					</Box>
+				</Grid>
 
-				<label style={{ fontSize: 12, opacity: 0.7 }}>Email</label>
-				<input
-					value={form.customerEmail}
-					onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
-					style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #ddd", marginBottom: 10 }}
-				/>
+				{/* RIGHT: Booking form */}
+				<Grid size={{ xs: 12, md: 4 }}>
+					<Card variant="outlined" sx={{ borderRadius: 2 }}>
+						<CardContent sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+							<Typography variant="h6" sx={{ fontWeight: 800 }}>
+								Book Now
+							</Typography>
 
-				<label style={{ fontSize: 12, opacity: 0.7 }}>Phone (optional)</label>
-				<input
-					value={form.customerPhone}
-					onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
-					style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #ddd", marginBottom: 10 }}
-				/>
+							<TextField
+								label="Name"
+								value={form.customerName}
+								onChange={(e) => setForm({ ...form, customerName: e.target.value })}
+								size="small"
+								fullWidth
+							/>
 
-				<label style={{ fontSize: 12, opacity: 0.7 }}>Note (optional)</label>
-				<textarea
-					value={form.note}
-					onChange={(e) => setForm({ ...form, note: e.target.value })}
-					rows={3}
-					style={{ width: "100%", padding: 10, borderRadius: 10, border: "1px solid #ddd", marginBottom: 10 }}
-				/>
+							<TextField
+								label="Email"
+								type="email"
+								value={form.customerEmail}
+								onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
+								size="small"
+								fullWidth
+							/>
 
-				<button
-					disabled={createBooking.isPending}
-					onClick={async () => {
-						const payload = {
-							vehicleId: vehicle.id,
-							customerName: form.customerName.trim(),
-							customerEmail: form.customerEmail.trim(),
-							customerPhone: form.customerPhone.trim() || undefined,
-							note: form.note.trim() || undefined,
-						};
+							<TextField
+								label="Phone (optional)"
+								value={form.customerPhone}
+								onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
+								size="small"
+								fullWidth
+							/>
 
-						// Minimal client-side validation to avoid obvious bad requests
-						if (!payload.customerName || !payload.customerEmail) return;
+							<TextField
+								label="Note (optional)"
+								value={form.note}
+								onChange={(e) => setForm({ ...form, note: e.target.value })}
+								size="small"
+								fullWidth
+								multiline
+								minRows={3}
+							/>
 
-						await createBooking.mutateAsync(payload);
-						nav(`/bookings?email=${encodeURIComponent(payload.customerEmail)}`);
-					}}
-					style={{
-						width: "100%",
-						padding: 12,
-						borderRadius: 10,
-						border: "1px solid #ddd",
-						background: "black",
-						color: "white",
-						cursor: "pointer",
-						fontWeight: 700,
-					}}
-				>
-					{createBooking.isPending ? "Booking..." : "Confirm Booking"}
-				</button>
-			</div>
-		</div>
+							<Button
+								disabled={!canSubmit}
+								onClick={async () => {
+									const payload = {
+										vehicleId: vehicle.id,
+										customerName: form.customerName.trim(),
+										customerEmail: form.customerEmail.trim(),
+										customerPhone: form.customerPhone.trim() || undefined,
+										note: form.note.trim() || undefined,
+									};
+
+									if (!payload.customerName || !payload.customerEmail) return;
+
+									await createBooking.mutateAsync(payload);
+									nav(`/bookings?email=${encodeURIComponent(payload.customerEmail)}`);
+								}}
+								variant="contained"
+								sx={{ mt: 1, borderRadius: 2, py: 1.2, fontWeight: 800 }}
+							>
+								{createBooking.isPending ? "Booking..." : "Confirm Booking"}
+							</Button>
+						</CardContent>
+					</Card>
+				</Grid>
+			</Grid>
+		</Box>
 	);
 }

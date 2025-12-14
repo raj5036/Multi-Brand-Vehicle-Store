@@ -29,7 +29,7 @@ export default function CatalogPage() {
 		<div className="space-y-4">
 			<div>
 				<Typography variant="h3">Vehicle Catalog</Typography>
-				<Typography>Explore, filter, bookmark, and book vehicles.</Typography>
+				<Typography sx={{ marginBottom: 2 }}>Explore, filter, bookmark, and book vehicles.</Typography>
 			</div>
 
 			<FiltersBar filters={filters} setFilters={setFilters} />
