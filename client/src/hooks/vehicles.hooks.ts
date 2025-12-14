@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tansta
 import { api, ApiResponse, PaginatedResponse } from "../lib/api";
 import { Vehicle, VehicleFilters, VehicleListItem } from "../types/vehicle";
 
-export function useVehicles(filters: VehicleFilters & { limit?: number }) {
+export function useVehiclesInfinite(filters: VehicleFilters & { limit?: number }) {
 	const limit = filters.limit ?? 12;
 
 	return useInfiniteQuery({

@@ -1,27 +1,34 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 
-const linkClass = ({ isActive }: { isActive: boolean }) =>
-	`px-3 py-2 rounded ${isActive ? "bg-black text-white" : "text-black"}`;
+const navCls = ({ isActive }: { isActive: boolean }) =>
+	[
+		"px-3 py-2 rounded-xl text-sm font-semibold transition",
+		isActive ? "bg-black text-white" : "text-zinc-700 hover:bg-zinc-100",
+	].join(" ");
 
 export default function Layout() {
 	return (
-		<div style={{ fontFamily: "system-ui", maxWidth: 1100, margin: "0 auto", padding: 16 }}>
-			<header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-				<Link to="/" style={{ textDecoration: "none", color: "black" }}>
-					<h2 style={{ margin: 0 }}>Turno Vehicles</h2>
-				</Link>
+		<div className="min-h-screen bg-zinc-50">
+			<div className="max-w-6xl mx-auto px-4 py-5">
+				<header className="flex items-center justify-between">
+					<Link to="/" className="text-zinc-900 no-underline">
+						<div className="text-lg font-extrabold">Turno Vehicles</div>
+						<div className="text-xs text-zinc-600">Multi-brand vehicle store</div>
+					</Link>
 
-				<nav style={{ display: "flex", gap: 8 }}>
-					<NavLink to="/" className={linkClass} end>Catalog</NavLink>
-					<NavLink to="/bookmarks" className={linkClass}>Bookmarks</NavLink>
-					<NavLink to="/bookings" className={linkClass}>My Bookings</NavLink>
-					<NavLink to="/dashboard" className={linkClass}>Dashboard</NavLink>
-					<NavLink to="/admin" className={linkClass}>Admin</NavLink>
-				</nav>
-			</header>
+					<nav className="flex gap-2">
+						<NavLink to="/" className={navCls} end>Catalog</NavLink>
+						<NavLink to="/bookmarks" className={navCls}>Bookmarks</NavLink>
+						<NavLink to="/bookings" className={navCls}>My Bookings</NavLink>
+						<NavLink to="/dashboard" className={navCls}>Dashboard</NavLink>
+						<NavLink to="/admin" className={navCls}>Admin</NavLink>
+					</nav>
+				</header>
 
-			<div style={{ height: 16 }} />
-			<Outlet />
+				<main className="mt-6">
+					<Outlet />
+				</main>
+			</div>
 		</div>
 	);
 }
