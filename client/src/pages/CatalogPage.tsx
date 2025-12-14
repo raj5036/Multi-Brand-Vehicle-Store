@@ -53,12 +53,6 @@ export default function CatalogPage() {
 			</div>
 
 			<div className="flex items-center justify-between pt-2">
-				<div className="text-sm text-zinc-600">
-					{vehiclesQ.data?.pages?.[0]?.meta
-						? `Total: ${vehiclesQ.data.pages[0].meta.total}`
-						: ""}
-				</div>
-
 				<button
 					disabled={!vehiclesQ.hasNextPage || vehiclesQ.isFetchingNextPage}
 					onClick={() => vehiclesQ.fetchNextPage()}
@@ -69,7 +63,7 @@ export default function CatalogPage() {
 							: "bg-zinc-100 text-zinc-500 border-zinc-200 cursor-not-allowed",
 					].join(" ")}
 				>
-					{vehiclesQ.isFetchingNextPage ? "Loading..." : vehiclesQ.hasNextPage ? "Load More" : "No More"}
+					{vehiclesQ.isFetchingNextPage ? "Loading..." : vehiclesQ.hasNextPage ? "Load More" : ""}
 				</button>
 			</div>
 		</div>
