@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { FuelType, VehicleFilters } from "../types/vehicle";
 
 export default function FiltersBar({
@@ -10,17 +11,7 @@ export default function FiltersBar({
 	const set = (patch: Partial<VehicleFilters>) => setFilters({ ...filters, ...patch });
 
 	return (
-		<div
-			style={{
-				display: "grid",
-				gridTemplateColumns: "1.2fr 1fr 1fr 1fr 120px",
-				gap: 10,
-				alignItems: "end",
-				border: "1px solid #eee",
-				padding: 12,
-				borderRadius: 12,
-			}}
-		>
+		<div className="flex justify-start items-center gap-[40px] mb-[16px]">
 			<div>
 				<label style={{ fontSize: 12, opacity: 0.7 }}>Brand</label>
 				<input
@@ -65,18 +56,15 @@ export default function FiltersBar({
 				/>
 			</div>
 
-			<button
+			<Button
 				onClick={() => setFilters({})}
-				style={{
-					padding: 10,
-					borderRadius: 10,
-					border: "1px solid #ddd",
-					background: "white",
-					cursor: "pointer",
-				}}
+				// className="rounded-[10px] bg-white cursor-pointer p-[10px] border border-solid border-[#ddd] mt-[17px]"
+				size="small"
+				variant="contained"
+				color="info"
 			>
 				Reset
-			</button>
+			</Button>
 		</div>
 	);
 }

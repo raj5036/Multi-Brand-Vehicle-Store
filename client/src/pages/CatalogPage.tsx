@@ -6,6 +6,7 @@ import VehicleCardSkeleton from "../components/VehicleCardSkeleton";
 import ErrorState from "../components/ErrorState";
 import { useVehiclesInfinite } from "../hooks/vehicles.hooks";
 import { useBookmarks, useCreateBookmark } from "../hooks/bookmarks.hooks";
+import { Typography } from "@mui/material";
 
 export default function CatalogPage() {
 	const [filters, setFilters] = useState<VehicleFilters>({});
@@ -27,8 +28,8 @@ export default function CatalogPage() {
 	return (
 		<div className="space-y-4">
 			<div>
-				<h3 className="text-xl font-semibold text-zinc-900">Vehicle Catalog</h3>
-				<p className="text-sm text-zinc-600">Explore, filter, bookmark, and book vehicles.</p>
+				<Typography variant="h3">Vehicle Catalog</Typography>
+				<Typography>Explore, filter, bookmark, and book vehicles.</Typography>
 			</div>
 
 			<FiltersBar filters={filters} setFilters={setFilters} />
