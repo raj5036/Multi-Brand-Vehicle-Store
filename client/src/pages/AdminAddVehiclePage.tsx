@@ -108,8 +108,7 @@ export default function AdminAddVehiclePage() {
 		},
 		[]
 	);
-
-	// Validate live (keeps helper text accurate)
+	
 	React.useEffect(() => {
 		setErrors(validate(form));
 	}, [form, validate]);
@@ -181,8 +180,7 @@ export default function AdminAddVehiclePage() {
 					sx={{ pb: 1 }}
 				/>
 				<Divider />
-
-				{/* Form wrapper enables Enter-to-submit */}
+				
 				<CardContent>
 					<Box component="form" onSubmit={handleSubmit} noValidate>
 						<Stack spacing={2}>
