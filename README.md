@@ -15,10 +15,16 @@
 ## Local Setup
 
 ### Backend
-```bash
-cd server
-cp .env.example .env # or create .env
-npm i
-npx prisma migrate dev
-npx prisma db seed
-npm run dev
+
+1. `cd server`
+2. `cp .env.example .env` # or create .env
+3. `npm i`
+4. `npx prisma migrate dev`
+5. `npx prisma db seed`
+6. `npm run dev`
+
+### Frontend
+1. `cd client`
+2. `cp .env.example .env` # or create .env
+3. `npm i`
+4. `npm run dev`
