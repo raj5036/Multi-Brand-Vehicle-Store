@@ -22,7 +22,7 @@ export default function FiltersBar({
 	return (
 		<Box sx={{ mb: 2 }}>
 			<Grid container spacing={2} alignItems="flex-end">
-				<Grid item xs={12} sm={6} md={3}>
+				<Grid size={{ xs: 12, sm: 6, md: 3 }}>
 					<TextField
 						label="Brand"
 						placeholder="Tesla, Toyota..."
@@ -33,7 +33,7 @@ export default function FiltersBar({
 					/>
 				</Grid>
 
-				<Grid item xs={12} sm={6} md={2}>
+				<Grid size={{ xs: 12, sm: 6, md: 2 }}>
 					<FormControl size="small" fullWidth>
 						<InputLabel id="fuel-label">Fuel</InputLabel>
 						<Select
@@ -52,7 +52,7 @@ export default function FiltersBar({
 					</FormControl>
 				</Grid>
 
-				<Grid item xs={12} sm={6} md={2}>
+				<Grid size={{ xs: 12, sm: 6, md: 2 }}>
 					<TextField
 						label="Min Price"
 						type="number"
@@ -63,7 +63,7 @@ export default function FiltersBar({
 					/>
 				</Grid>
 
-				<Grid item xs={12} sm={6} md={2}>
+				<Grid size={{ xs: 12, sm: 6, md: 2 }}>
 					<TextField
 						label="Max Price"
 						type="number"
@@ -74,7 +74,7 @@ export default function FiltersBar({
 					/>
 				</Grid>
 
-				<Grid item xs={12} md={3}>
+				<Grid size={{ xs: 12, md: 3 }}>
 					<Button
 						onClick={() => setFilters({})}
 						variant="contained"
