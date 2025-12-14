@@ -99,9 +99,8 @@ export default function VehicleDetailsPage() {
 
 		return errors;
 	};
-
-	// eslint-disable-next-line react-hooks/rules-of-hooks
-	const errors = useMemo(() => validate(form), [form]);
+	
+	const errors = validate(form);
 	const isFormValid = Object.keys(errors).length === 0;
 
 	const setField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
